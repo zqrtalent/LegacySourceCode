@@ -1,0 +1,61 @@
+RegisterClassA               77d5148c
+RegisterClassExA             77d537e6
+RegisterClassW               77d4A39A
+RegisterClassExW             77d4AF7F
+CreateDialogParamA           77D6C7B3
+CreateDialogParamW           77D6EFF7
+GetWIndowTextW               77D4CDB6
+GetWIndowTextA               77D6213C
+CreateThread                 7c810637
+GetMenu                      77D6148B
+GetSubMenu                   77D516E2
+AppendMenuW                  77D5CD4A
+SetTimer                     77D48c2E
+
+dialog proc address is 7C2692AC
+switch for dialog messages: 77D5420E   83 FF 39    E9 1C 13 02 00   jmp         77D7562B 
+
+label for dialog creation is 0040B59B
+
+HWND CreateDialogParam(      
+    HINSTANCE hInstance,
+    LPCTSTR lpTemplateName,
+    HWND hWndParent,
+    DLGPROC lpDialogFunc,
+    LPARAM dwInitParam
+);
+
+// header.
+0040004E 81 FF 11 01 00 00 cmp         edi,111h 
+00400054 0F 84 05 00 00 00 je          0040005F 
+0040005A E9 4D 92 E6 7B   jmp         7C2692AC 
+0040005F E9 48 92 E6 7B   jmp         7C2692AC 
+
+Gets entered password from edit control 10002AC4  call        100055FA
+very important address 100036F2h
+
+
+start of decoding in dialog 10003755h [esp+1B8h is pointer to IMEI code] [esp+238h is pointer to the entered code]
+calling decoder function at startup 100035B1  call        1004BDD3 
+
+10003617 BF FF 00 00 00   mov         edi,0FFh 
+
+359738007567714 
+
+
+calculating of entered password.
+0x10038BA0 
+0x10079946
+0x1002E7DD
+
+recurse function 0x1005EBDC
+10051603  cmp eax,58CA401Ch 
+
+1007CD33 1001D3D8
+
+
+//------------------------------------------------------------------
+crack info:
+check function on stratup:    10003670  call  1001B223 returns 3 if success
+check function on code enter: 10003781  call  1007DC3C returns 3 if success
+

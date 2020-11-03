@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Winamp5_21Crack", "Winamp5_21Crack.vcproj", "{58EB6F29-1CC7-4D62-B83F-DB196CA0A70F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{58EB6F29-1CC7-4D62-B83F-DB196CA0A70F}.Debug.ActiveCfg = Debug|Win32
+		{58EB6F29-1CC7-4D62-B83F-DB196CA0A70F}.Debug.Build.0 = Debug|Win32
+		{58EB6F29-1CC7-4D62-B83F-DB196CA0A70F}.Release.ActiveCfg = Release|Win32
+		{58EB6F29-1CC7-4D62-B83F-DB196CA0A70F}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

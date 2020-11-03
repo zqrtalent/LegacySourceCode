@@ -1,0 +1,262 @@
+1: First Checking of Activation Code.
+ebp-64h pointer to the instalation code.1
+	00000000 00000000 - 00000000 00000000 - 00000000 00000000
+	00000000 00000000 - 00000000 00000000
+ebp-58h pointer to the activation code.0
+	00000000 00000000 - 00000000 00000000 - 00000000 00000000
+	00000000 00000000 - 00000000 00000000
+ebp-38h pointer to the serial number.1
+	00000000 00000000 - 00000000 00000000 - 00000000 00000000
+	00000000 00000000 - 00000000 00000000
+
+act = Activation Key Array[word[5]], ins = Instalation Code Array[word[5]], ser = Serial Number Array[word[5]].
+
+xxx[word index]{byte index}
+
+1) act[0]{8}  = ins[4]{15} | ser[2]{15}.
+2) act[2]{14} = ins[2]{11} & ser[3]{4}.
+3) act[4]{5} = ins[2]{14} ^ ser[0]{11}.
+4) act[1]{3} = ser[4]{12}  ^ ins[3]{8}.
+5) act[3]{3} = ser[0]{10} | ins[1]{1}.
+6) act[2]{7} = ins[0]{14} | ser[3]{12}.
+7) act[0]{4} = ins[2]{13} | ser[1]{6}.
+8) act[1]{12} = ins[3]{15} & ser[0]{3}.
+9) act[2]{10} = ins[4]{11} & ser[0]{0}.
+10) act[3]{15} = ser[4]{10} & ins[1]{4}.
+11) act[4]{2} = ins[3]{4} & ser[4]{15}.
+12) act[4]{13} = ser[3]{5} ^ ins[3]{10}. {shebrunebulia}
+13) act[0]{3} = ser[2]{4} | ins[3]{2}.
+14) act[1]{1} = ins[0]{11} & ser[3]{8}.
+15) act[2]{1} = ins[0]{13} | ser[0]{12}.
+16) act[3]{12} = ser[1]{2} ^ ins[2]{3}. {shebrunebulia}
+17) act[4]{14} = ins[1]{5} & ser[0]{1}.
+
+1)   act[0]{0}  = 1. 2)  act[2]{15}  = 1.  3) act[0]{7} = 1.  4) act[1]{11} = 1. 5) act[1]{0} = 1.
+6)   act[4]{1}  = 1. 7)  act[1]{2}  = 1.    8) act[0]{9} = 1.  9) act[2]{3} = 1.  10) act[4]{12} = 1.
+11) act[2]{5}  = 1. 12) act[3]{10}  = 1. 13) act[2]{8} = 1. 14) act[1]{13} = 1. 15) act[2]{9} = 1.
+16) act[0]{2}  = 1. 17) act[3]{1}  = 1.  18) act[0]{13} = 1. 19) act[3]{13} = 1. 20) act[1]{7} = 1.
+21) act[3]{6}  = 1. 22) act[2]{12}  = 1. 23) act[4]{15} = 1. 24) act[2]{4} = 1. 25) act[4]{7} = 1.
+26) act[0]{5}  = 1. 27) act[4]{9}  = 1.  28) act[4]{4} = 1.
+
+stored addresses :
+word ptr [ebp-48h] = (dword ptr [ebp-58h]>>1)&4.
+
+Step_1:
+10010115 8B 4D A4                 mov         ecx,dword ptr [ebp-5Ch]
+10010118 0B 4D CC                or             ecx,dword ptr [ebp-34h]
+1001011B 8B 55 A8                 mov         edx,dword ptr [ebp-58h]
+1001011E C1 E9 07                 shr          ecx,7
+10010121 B8 00 01 00 00         mov         eax,100h
+10010126 23 C8                      and          ecx,eax
+10010128 23 D0                      and          edx,eax
+1001012A 83 C4 18                 add          esp,18h
+1001012D 3B D1                     cmp         edx,ecx
+1001012F 0F 85 BD 01 00 00   jne           100102F2
+
+Step_2:
+10010135 8B 45 A0                mov         eax,dword ptr [ebp-60h]
+10010138 8B 4D AC               mov         ecx,dword ptr [ebp-54h]
+1001013B C1 E8 07               shr           eax,7
+1001013E 22 45 CE               and          al,byte ptr [ebp-32h]
+10010141 C1 E9 0A               shr           ecx,0Ah
+10010144 32 C1                    xor           al,cl
+10010146 A8 10                    test          al,10h
+10010148 0F 85 A4 01 00 00  jne           100102F2
+
+Step_3:
+1001014E 8B 45 A0               mov        eax,dword ptr [ebp-60h]
+10010151 C1 E8 03               shr          eax,3
+10010154 33 45 C8                xor          eax,dword ptr [ebp-38h]
+10010157 C1 E8 06               shr          eax,6
+1001015A 32 45 B0               xor          al,byte ptr [ebp-50h]
+1001015D A8 20                    test        al,20h
+1001015F 0F 85 8D 01 00 00  jne         100102F2
+
+Step_4:
+10010165 8B 45 D0               mov         eax,dword ptr [ebp-30h]
+10010168 C1 E8 04               shr          eax,4
+1001016B 33 45 A2               xor          eax,dword ptr [ebp-5Eh]
+1001016E C1 E8 05               shr         eax,5
+10010171 32 45 AA               xor         al,byte ptr [ebp-56h]
+10010174 A8 08                    test        al,8
+10010176 0F 85 76 01 00 00  jne         100102F2
+
+Step_5:
+1001017C 8B 45 C8               mov         eax,dword ptr [ebp-38h]
+1001017F 8B 4D AE              mov         ecx,dword ptr [ebp-52h]
+10010182 C1 E8 09               shr          eax,9
+10010185 0A 45 9E               or            al,byte ptr [ebp-62h]
+10010188 33 D2                    xor          edx,edx
+1001018A 8A D1                   mov         dl,cl
+1001018C C0 EA 02              shr          dl,2
+1001018F 6A 02                    push        2
+10010191 5E                         pop         esi
+10010192 23 C6                    and          eax,esi
+10010194 23 D6                    and          edx,esi
+10010196 33 C2                    xor          eax,edx
+10010198 66 A9 FE FF          test         ax,0FFFEh
+1001019C 0F 85 50 01 00 00  jne          100102F2
+
+Step_6:
+100101A2 8B 45 9C                  mov         eax,dword ptr [ebp-64h]
+100101A5 33 DB                      xor           ebx,ebx
+100101A7 8A 5D AC                 mov         bl,byte ptr [ebp-54h]
+100101AA 8B D0                      mov         edx,eax
+100101AC C1 EA 02                 shr          edx,2
+100101AF 0B 55 CE                 or            edx,dword ptr [ebp-32h]
+100101B2 C1 EA 05                 shr          edx,5
+100101B5 81 E2 80 00 FF FF    and         edx,0FFFF0080h
+100101BB 81 E3 80 00 FF FF   and         ebx,0FFFF0080h
+100101C1 33 D3                      xor          edx,ebx
+100101C3 66 F7 C2 80 FF        test         dx,0FF80h
+100101C8 0F 85 24 01 00 00    jne          100102F2
+
+Step_7:
+100101CE 8B 55 A0                mov         edx,dword ptr [ebp-60h]
+100101D1 C1 EA 07                shr          edx,7
+100101D4 0A 55 CA                or            dl,byte ptr [ebp-36h]
+100101D7 33 DB                     xor          ebx,ebx
+100101D9 8A 5D A8                mov         bl,byte ptr [ebp-58h]
+100101DC C0 EA 02                shr          dl,2
+100101DF 83 E3 10                 and         ebx,10h
+100101E2 83 E2 10                 and         edx,10h
+100101E5 33 D3                     xor          edx,ebx
+100101E7 66 F7 C2 F0 FF       test        dx,0FFF0h
+100101EC 0F 85 00 01 00 00    jne         100102F2
+
+Step_8:
+100101F2 8B 55 A2              mov         edx,dword ptr [ebp-5Eh]
+100101F5 8B 5D AA             mov         ebx,dword ptr [ebp-56h]
+100101F8 C1 EA 0C             shr          edx,0Ch
+100101FB 22 55 C8              and         dl,byte ptr [ebp-38h]
+100101FE C1 EB 09             shr          ebx,9
+10010201 80 E2 08               and         dl,8
+10010204 80 E3 08               and         bl,8
+10010207 3A DA                  cmp        bl,dl
+10010209 0F 85 E3 00 00 00 jne          100102F2
+
+Step_9:
+1001020F 8B 55 A4                mov        edx,dword ptr [ebp-5Ch]
+10010212 8B 5D AC               mov        ebx,dword ptr [ebp-54h]
+10010215 C1 EA 0B               shr         edx,0Bh
+10010218 22 55 C8                and        dl,byte ptr [ebp-38h]
+1001021B C1 EB 0A              shr         ebx,0Ah
+1001021E 32 D3                    xor         dl,bl
+10010220 F6 C2 01                test        dl,1
+10010223 0F 85 C9 00 00 00  jne         100102F2
+
+Step_10:
+10010229 8B 55 D0                mov         edx,dword ptr [ebp-30h]
+1001022C C1 EA 06               shr          edx,6
+1001022F 22 55 9E                and         dl,byte ptr [ebp-62h]
+10010232 8B D9                    mov         ebx,ecx
+10010234 C1 EB 0B              shr          ebx,0Bh
+10010237 80 E2 10                and         dl,10h
+1001023A 80 E3 10               and          bl,10h
+1001023D 3A DA                   cmp         bl,dl
+1001023F 0F 85 AD 00 00 00  jne         100102F2
+
+Step_11:
+10010245 8B 55 A2              mov         edx,dword ptr [ebp-5Eh]
+10010248 8B 5D D0              mov         ebx,dword ptr [ebp-30h]
+1001024B C1 EB 0D             shr          ebx,0Dh
+1001024E C1 EA 02              shr          edx,2
+10010251 22 D3                    and         dl,bl
+10010253 8A 5D B0               mov         bl,byte ptr [ebp-50h]
+10010256 80 E2 04                and         dl,4
+10010259 80 E3 04                and         bl,4
+1001025C 3A DA                   cmp        bl,dl
+1001025E 0F 85 8E 00 00 00  jne         100102F2
+
+Step_12:
+10010264 8B 55 B0              mov        edx,dword ptr [ebp-50h]
+10010267 C1 EA 03              shr         edx,3
+1001026A 33 55 A2              xor         edx,dword ptr [ebp-5Eh]
+1001026D C1 EA 05             shr         edx,5
+10010270 32 55 CE             xor         dl,byte ptr [ebp-32h]
+10010273 F6 C2 20             test        dl,20h
+10010276 75 7A                 jne         100102F2
+
+Step_13:
+10010278 8B 55 CC             mov         edx,dword ptr [ebp-34h]
+1001027B 8B 5D A8             mov         ebx,dword ptr [ebp-58h]
+1001027E C0 EA 02             shr          dl,2
+10010281 0A 55 A2              or           dl,byte ptr [ebp-5Eh]
+10010284 D0 EB                  shr         bl,1
+10010286 83 E3 04              and         ebx,4
+10010289 83 E2 04              and         edx,4
+1001028C 66 89 5D B8         mov        word ptr [ebp-48h],bx
+10010290 33 55 B8              xor          edx,dword ptr [ebp-48h]
+10010293 66 F7 C2 FC FF   test         dx,0FFFCh
+10010298 75 58                   jne         100102F2
+
+Step_14:
+1001029A 8B 55 CE             mov         edx,dword ptr [ebp-32h]
+1001029D 8B D8                  mov         ebx,eax
+1001029F C1 EB 0A             shr         ebx,0Ah
+100102A2 C1 EA 07             shr         edx,7
+100102A5 22 DA                  and         bl,dl
+100102A7 32 5D AA             xor         bl,byte ptr [ebp-56h]
+100102AA F6 C3 02             test        bl,2
+100102AD 75 43                  jne         100102F2
+
+Step_15:
+100102AF 8B 55 AC             mov         edx,dword ptr [ebp-54h]
+100102B2 D1 E8                  shr          eax,1
+100102B4 0B 45 C8             or            eax,dword ptr [ebp-38h]
+100102B7 23 D6                  and         edx,esi {esi = 2}
+100102B9 C1 E8 0B             shr         eax,0Bh
+100102BC 23 C6                  and         eax,esi
+100102BE 33 C2                  xor         eax,edx
+100102C0 66 A9 FE FF        test        ax,0FFFEh
+100102C4 75 2C                  jne         100102F2
+
+Step_16:
+100102C6 C1 E9 09             shr         ecx,9
+100102C9 33 4D A0             xor         ecx,dword ptr [ebp-60h]
+100102CC D1 E9                 shr         ecx,1
+100102CE 32 4D CA            xor         cl,byte ptr [ebp-36h]
+100102D1 F6 C1 04             test        cl,4
+100102D4 75 1C                  jne         100102F2
+
+Step_17:
+100102D6 8B 45 9E                    mov         eax,dword ptr [ebp-62h]
+100102D9 8B 4D B0                   mov         ecx,dword ptr [ebp-50h]
+100102DC C1 E8 04                   shr          eax,4
+100102DF 22 45 C8                    and         al,byte ptr [ebp-38h]
+100102E2 C1 E9 0D                   shr          ecx,0Dh
+100102E5 32 C1                         xor         al,cl
+100102E7 A8 02                         test        al,2
+100102E9 C7 45 C4 01 00 00 00  mov        dword ptr [ebp-3Ch],1
+100102F0 74 03                          je           100102F5
+100102F2 89 7D C4                    mov        dword ptr [ebp-3Ch],edi
+100102F5 6A 01                         push       1
+
+
+2:Second Checking of Activation Code.
+
+edx = pointer to the Activation Code.
+ecx = 0,2,0,1,1,4,1,0,2,4,2,3,2,1,2,0,3,0,3,1,3,2,4,2,4,0,4,4
+
+100F8484   mov         ecx,dword ptr [esi+4]
+100F8487   movzx      esi, word ptr [edx+ecx*2]
+100F848B   mov         ecx,dword ptr [edi+4]
+
+ecx = 0,F,7,B,0,1,2,9,3,C,5,A,8,D,9,2,1,D,D,7,6,C,F,4,7,5,9,4
+
+100F848E   xor          edx,edx
+100F8490   inc          edx
+100F8491   mov         ebx,edx
+100F8493   shl          ebx,cl
+100F8495   mov         dword ptr [eax],edx
+100F8497   test         ebx,esi
+100F8499   setne       cl   
+100F849C   movzx      ecx,cl  // there cl must be 1. Zqr {3.4.2006}
+100F849F   mov         dword ptr [eax+4],ecx
+
+1)   act[0]{0}  = 1. 2)  act[2]{15}  = 1.  3) act[0]{7} = 1.  4) act[1]{11} = 1. 5) act[1]{0} = 1.
+6)   act[4]{1}  = 1. 7)  act[1]{2}  = 1.    8) act[0]{9} = 1.  9) act[2]{3} = 1.  10) act[4]{12} = 1.
+11) act[2]{5}  = 1. 12) act[3]{10}  = 1. 13) act[2]{8} = 1. 14) act[1]{13} = 1. 15) act[2]{9} = 1.
+16) act[0]{2}  = 1. 17) act[3]{1}  = 1.  18) act[0]{13} = 1. 19) act[3]{13} = 1. 20) act[1]{7} = 1.
+21) act[3]{6}  = 1. 22) act[2]{12}  = 1. 23) act[4]{15} = 1. 24) act[2]{4} = 1. 25) act[4]{7} = 1.
+26) act[0]{5}  = 1. 27) act[4]{9}  = 1.  28) act[4]{4} = 1.

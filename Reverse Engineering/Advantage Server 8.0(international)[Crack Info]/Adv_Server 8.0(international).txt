@@ -1,0 +1,387 @@
+	--= Advantage Configuration =--
+
+Serial Dialog Proc is                            C58AF5h
+WM_COMMAND message is recievd in C59841h
+Encoder function address is                  C49DA0h (from Serial number chacks validation code & replication code)
+function gets text of window                  C5B591h 
+function gets length of current text         C5BC40h
+
+
+note: 
+	Serial number contines 9 character "0" to "9"
+	Validation code contines 5 character.
+	Replication code contines 5 character.
+	ADS.EXE Service chacks validation of replication code by 7A5F96h function.
+
+
+function gets unical dword number of serial string.
+
+edi is pointer to the Serial number string.
+[0C6E0A0h] = 00C6E0AA
+
+this code gets unical number of serial string.
+
+00C4DB79   cmp         dword ptr ds:[0C6E2ACh],1
+00C4DB80   jle         00C4DB91
+00C4DB82   movzx       eax,byte ptr [edi]
+00C4DB85   push        8
+00C4DB87   push        eax
+00C4DB88   call        00C50738
+00C4DB8D   pop         ecx
+00C4DB8E   pop         ecx
+00C4DB8F   jmp         00C4DBA0
+00C4DB91   movzx       eax,byte ptr [edi]
+00C4DB94   mov         ecx,dword ptr ds:[0C6E0A0h]
+00C4DB9A   mov         al,byte ptr [ecx+eax*2]
+00C4DB9D   and         eax,8
+00C4DBA0   test        eax,eax
+00C4DBA2   je          00C4DBA7
+00C4DBA4   inc         edi
+00C4DBA5   jmp         00C4DB79
+00C4DBA7   movzx       esi,byte ptr [edi]
+00C4DBAA   inc         edi
+00C4DBAB   cmp         esi,2Dh
+00C4DBAE   mov         ebp,esi
+00C4DBB0   je          00C4DBB7
+00C4DBB2   cmp         esi,2Bh
+00C4DBB5   jne         00C4DBBB
+00C4DBB7   movzx       esi,byte ptr [edi]
+00C4DBBA   inc         edi
+00C4DBBB   xor         ebx,ebx
+00C4DBBD   cmp         dword ptr ds:[0C6E2ACh],1
+00C4DBC4   jle           00C4DBD2
+00C4DBC6   push        4
+00C4DBC8   push        esi
+00C4DBC9   call         00C50738
+00C4DBCE   pop         ecx
+00C4DBCF   pop         ecx
+00C4DBD0   jmp         00C4DBDD
+00C4DBD2   mov         eax,[00C6E0A0]
+00C4DBD7   mov         al,byte ptr [eax+esi*2]
+00C4DBDA   and         eax,4
+00C4DBDD   test        eax,eax
+00C4DBDF   je           00C4DBEE
+00C4DBE1   lea          eax,[ebx+ebx*4]
+00C4DBE4   lea          ebx,[esi+eax*2-30h]
+00C4DBE8   movzx       esi,byte ptr [edi]
+00C4DBEB   inc          edi
+00C4DBEC   jmp         00C4DBBD
+00C4DBEE   cmp        ebp,2Dh
+00C4DBF1   mov         eax,ebx
+00C4DBF3   jne          00C4DBF7
+00C4DBF5   neg         eax
+
+// in ADS.EXE Service.
+
+008062EE   push        ebx
+008062EF   push        ebp
+008062F0   push        esi
+008062F1   push        edi
+008062F2   mov         edi,dword ptr [esp+14h]
+008062F6   cmp         dword ptr ds:[86F97Ch],1
+008062FD   jle         0080630E
+008062FF   movzx       eax,byte ptr [edi]
+00806302   push        8
+00806304   push        eax
+00806305   call        00806CF2
+0080630A   pop         ecx
+0080630B   pop         ecx
+0080630C   jmp         0080631D
+0080630E   movzx       eax,byte ptr [edi]
+00806311   mov         ecx,dword ptr ds:[86F770h]
+00806317   mov         al,byte ptr [ecx+eax*2]
+0080631A   and         eax,8
+0080631D   test        eax,eax
+0080631F   je          00806324
+00806321   inc         edi
+00806322   jmp         008062F6
+00806324   movzx       esi,byte ptr [edi]
+00806327   inc         edi
+00806328   cmp         esi,2Dh
+0080632B   mov         ebp,esi
+0080632D   je          00806334
+0080632F   cmp         esi,2Bh
+00806332   jne         00806338
+00806334   movzx       esi,byte ptr [edi]
+00806337   inc         edi
+00806338   xor         ebx,ebx
+0080633A   cmp         dword ptr ds:[86F97Ch],1
+00806341   jle         0080634F
+00806343   push        4
+00806345   push        esi
+00806346   call        00806CF2
+0080634B   pop         ecx
+0080634C   pop         ecx
+0080634D   jmp         0080635A
+0080634F   mov         eax,[0086F770]
+00806354   mov         al,byte ptr [eax+esi*2]
+00806357   and         eax,4
+0080635A   test        eax,eax
+0080635C   je          0080636B
+0080635E   lea         eax,[ebx+ebx*4]
+00806361   lea         ebx,[esi+eax*2-30h]
+00806365   movzx       esi,byte ptr [edi]
+00806368   inc         edi
+00806369   jmp         0080633A
+0080636B   cmp         ebp,2Dh
+0080636E   mov         eax,ebx
+00806370   jne         00806374
+00806372   neg         eax
+00806374   pop         edi
+00806375   pop         esi
+00806376   pop         ebp
+00806377   pop         ebx
+00806378   ret
+
+
+dword ptr ds:[0C6E0A0h] = 00C6E0AA
+
+00C6E0AA  20 00 20 00 20 00 20 00   . . . .
+00C6E0B2  20 00 20 00 20 00 20 00   . . . .
+00C6E0BA  20 00 28 00 28 00 28 00   .(.(.(.
+00C6E0C2  28 00 28 00 20 00 20 00  (.(. . .
+00C6E0CA  20 00 20 00 20 00 20 00   . . . .
+00C6E0D2  20 00 20 00 20 00 20 00   . . . .
+00C6E0DA  20 00 20 00 20 00 20 00   . . . .
+00C6E0E2  20 00 20 00 20 00 20 00   . . . .
+00C6E0EA  48 00 10 00 10 00 10 00  H.......
+00C6E0F2  10 00 10 00 10 00 10 00  ........
+00C6E0FA  10 00 10 00 10 00 10 00  ........
+00C6E102  10 00 10 00 10 00 10 00  ........
+00C6E10A  84 00 84 00 84 00 84 00  „.„.„.„.
+00C6E112  84 00 84 00 84 00 84 00  „.„.„.„.
+00C6E11A  84 00 84 00 10 00 10 00  „.„.....
+00C6E122  10 00 10 00 10 00 10 00  ........
+00C6E12A  10 00 81 00 81 00 81 00  ........
+00C6E132  81 00 81 00 81 00 01 00  ........
+00C6E13A  01 00 01 00 01 00 01 00  ........
+00C6E142  01 00 01 00 01 00 01 00  ........
+00C6E14A  01 00 01 00 01 00 01 00  ........
+00C6E152  01 00 01 00 01 00 01 00  ........
+00C6E15A  01 00 01 00 01 00 10 00  ........
+00C6E162  10 00 10 00 10 00 10 00  ........
+00C6E16A  10 00 82 00 82 00 82 00  ..‚.‚.‚.
+00C6E172  82 00 82 00 82 00 02 00  ‚.‚.‚...
+00C6E17A  02 00 02 00 02 00 02 00  ........
+00C6E182  02 00 02 00 02 00 02 00  ........
+00C6E18A  02 00 02 00 02 00 02 00  ........
+00C6E192  02 00 02 00 02 00 02 00  ........
+00C6E19A  02 00 02 00 02 00 10 00  ........
+00C6E1A2  10 00 10 00 10 00 20 00  ...... .
+00C6E118  84 00 84 00 84 00 10 00  „.„.„...
+00C6E120  10 00 10 00 10 00 10 00  ........
+00C6E128  10 00 10 00 81 00 81 00  ........
+00C6E130  81 00 81 00 81 00 81 00  ........
+00C6E138  01 00 01 00 01 00 01 00  ........
+00C6E140  01 00 01 00 01 00 01 00  ........
+00C6E148  01 00 01 00 01 00 01 00  ........
+00C6E150  01 00 01 00 01 00 01 00  ........
+00C6E158  01 00 01 00 01 00 01 00  ........
+00C6E160  10 00 10 00 10 00 10 00  ........
+00C6E168  10 00 10 00 82 00 82 00  ....‚.‚.
+00C6E170  82 00 82 00 82 00 82 00  ‚.‚.‚.‚.
+00C6E178  02 00 02 00 02 00 02 00  ........
+00C6E180  02 00 02 00 02 00 02 00  ........
+00C6E188  02 00 02 00 02 00 02 00  ........
+00C6E190  02 00 02 00 02 00 02 00  ........
+00C6E198  02 00 02 00 02 00 02 00  ........
+00C6E1A0  10 00 10 00 10 00 10 00  ........
+00C6E1A8  20 00 00 00 00 00 00 00   .......
+
+function gets special 5 character string from Serial Number. C4D32Bh
+
+eax = special dword for generating.
+ecx = address to store special 5 charecter string.
+
+00C4D32B   push        eax
+00C4D32C   push        ecx
+00C4D32D   call         00C4BF20
+00C4D332   mov         eax,dword ptr [esp+20h]
+00C4D336   xor          edx,edx
+00C4D338   div          eax,dword ptr ds:[0C6F99Ch]
+00C4D33E   add         esp,8
+00C4D341   mov         ecx,edx
+00C4D343   test        ecx,ecx
+00C4D345   jne         00C4D34C
+00C4D347   mov         ecx,1
+00C4D34C   imul        ecx,dword ptr [esp+1Ch]
+00C4D351   push        ebx
+00C4D352   push        ebp
+00C4D353   push        esi
+00C4D354   push        edi
+00C4D355   lea         esi,[esp+20h]
+00C4D359   mov         edi,4
+00C4D35E   mov         eax,ecx
+00C4D360   xor         edx,edx
+00C4D362   mov         ebx,19h
+00C4D367   sub         esi,4
+00C4D36A   div         eax,ebx
+00C4D36C   mov         eax,51EB851Fh
+00C4D371   mov         dword ptr [esi+4],edx
+00C4D374   mul         eax,ecx
+00C4D376   shr         edx,3
+00C4D379   dec         edi
+00C4D37A   mov         ecx,edx
+00C4D37C   jne         00C4D35E
+00C4D37E   mov         eax,dword ptr [esp+20h]
+00C4D382   mov         dword ptr [esp+10h],ecx
+00C4D386   xor         edx,edx
+00C4D388   mov         ecx,0Bh
+00C4D38D   div         eax,ecx
+00C4D38F   mov         ebp,dword ptr [esp+30h]
+00C4D393   xor         esi,esi
+00C4D395   lea         ecx,[esp+10h]
+00C4D399   mov         edi,edx
+00C4D39B   mov         eax,dword ptr [ecx]
+00C4D39D   xor         edx,edx
+00C4D39F   add         eax,edi
+00C4D3A1   mov         ebx,19h
+00C4D3A6   div         eax,ebx
+00C4D3A8   lea         eax,[edx+41h]
+00C4D3AB   cmp         eax,4Fh
+00C4D3AE   mov         dword ptr [ecx],eax
+00C4D3B0   jb          00C4D3B5
+00C4D3B2   inc         eax
+00C4D3B3   mov         dword ptr [ecx],eax
+00C4D3B5   mov         dl,byte ptr [ecx]
+00C4D3B7   add         ecx,4
+00C4D3BA   mov         byte ptr [esi+ebp],dl
+00C4D3BD   inc         esi
+00C4D3BE   cmp         esi,5
+00C4D3C1   jl          00C4D39B
+00C4D3C3   mov         eax,dword ptr [esp+20h]
+00C4D3C7   xor         edx,edx
+00C4D3C9   mov         ecx,5
+00C4D3CE   div         eax,ecx
+00C4D3D0   lea         eax,[esp+20h]
+00C4D3D4   mov         esi,ecx
+00C4D3D6   mov         cl,byte ptr [eax]
+00C4D3D8   test        edx,edx
+00C4D3DA   mov         byte ptr [edx+ebp],cl
+00C4D3DD   jne         00C4D3E4
+00C4D3DF   mov         edx,5
+00C4D3E4   dec         edx
+00C4D3E5   sub         eax,4
+00C4D3E8   dec         esi
+00C4D3E9   jne         00C4D3D6
+00C4D3EB   pop         edi
+00C4D3EC   mov         byte ptr [ebp+5],0
+
+
+// in ADS.EXE Service.
+
+00804E48   push        ebp
+00804E49   mov         ebp,esp
+00804E4B   sub         esp,14h
+00804E4E   push        dword ptr [ebp+0Ch]
+00804E51   lea         eax,[ebp+0Ch]
+00804E54   push        eax
+00804E55   call        00803B7C
+00804E5A   mov         eax,dword ptr [ebp+8]
+00804E5D   pop         ecx
+00804E5E   pop         ecx
+00804E5F   xor         edx,edx
+00804E61   mov         ecx,27EFh
+00804E66   div         eax,ecx
+00804E68   test        edx,edx
+00804E6A   jne         00804E6F
+00804E6C   push        1
+00804E6E   pop         edx
+00804E6F   imul        edx,dword ptr [ebp+0Ch]
+00804E73   push        ebx
+00804E74   push        esi
+00804E75   push        edi
+00804E76   push        4
+00804E78   mov         ecx,edx
+00804E7A   lea         esi,[ebp-4]
+00804E7D   pop         edi
+00804E7E   push        19h
+00804E80   mov         eax,ecx
+00804E82   xor         edx,edx
+00804E84   pop         ebx
+00804E85   div         eax,ebx
+00804E87   push        ebx
+00804E88   mov         eax,ecx
+00804E8A   pop         ecx
+00804E8B   mov         dword ptr [esi],edx
+00804E8D   xor         edx,edx
+00804E8F   div         eax,ecx
+00804E91   sub         esi,4
+00804E94   dec         edi
+00804E95   mov         ecx,eax
+00804E97   jne         00804E7E
+00804E99   mov         eax,dword ptr [ebp-4]
+00804E9C   push        0Bh
+00804E9E   mov         dword ptr [ebp-14h],ecx
+00804EA1   xor         edx,edx
+00804EA3   pop         ecx
+00804EA4   mov         edi,dword ptr [ebp+10h]
+00804EA7   div         eax,ecx
+00804EA9   xor         esi,esi
+00804EAB   lea         ecx,[ebp-14h]
+00804EAE   mov         dword ptr [ebp+0Ch],edx
+00804EB1   mov         eax,dword ptr [ecx]
+00804EB3   push        19h
+00804EB5   add         eax,dword ptr [ebp+0Ch]
+00804EB8   xor         edx,edx
+00804EBA   pop         ebx
+00804EBB   div         eax,ebx
+00804EBD   lea         eax,[edx+41h]
+00804EC0   cmp         eax,4Fh
+00804EC3   mov         dword ptr [ecx],eax
+00804EC5   jb          00804ECA
+00804EC7   inc         eax
+00804EC8   mov         dword ptr [ecx],eax
+00804ECA   mov         al,byte ptr [ecx]
+00804ECC   push        5
+00804ECE   mov         byte ptr [esi+edi],al
+00804ED1   inc         esi
+00804ED2   pop         ebx
+00804ED3   add         ecx,4
+00804ED6   cmp         esi,ebx
+00804ED8   jl          00804EB1
+00804EDA   mov         eax,dword ptr [ebp-4]
+00804EDD   xor         edx,edx
+00804EDF   mov         ecx,ebx
+00804EE1   mov         esi,ebx
+00804EE3   div         eax,ecx
+00804EE5   lea         eax,[ebp-4]
+00804EE8   mov         cl,byte ptr [eax]
+00804EEA   test        edx,edx
+00804EEC   mov         byte ptr [edx+edi],cl
+00804EEF   jne         00804EF3
+00804EF1   mov         edx,ebx
+00804EF3   dec         edx
+00804EF4   sub         eax,4
+00804EF7   dec         esi
+00804EF8   jne         00804EE8
+00804EFA   and         byte ptr [edi+5],0
+00804EFE   pop         edi
+00804EFF   pop         esi
+00804F00   xor         eax,eax
+00804F02   pop         ebx
+00804F03   leave
+00804F04   ret
+
+
+Serial Number Is:
+123344455 - WJEEE - AMPME
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

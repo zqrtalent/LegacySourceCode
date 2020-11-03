@@ -1,0 +1,12 @@
+// Zaqro 21.10.2005
+
+// Es Functia eax reg. atavsebs darchenili dgeebis raodenobas.
+0041CE55 call 0041C0A0
+
+// Es aris dakrekvis Semdeg.
+// 0041C1EB 80 C4 60 add ah,60h
+// 0041C264 80 C4 60 add ah,60h
+
+// Es iyo dakrekvamde.
+// 0041C1EB 66 33 C6 xor ax,ax
+// 0041C264 66 8B C6 mov ax,si

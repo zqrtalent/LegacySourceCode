@@ -1,0 +1,44 @@
+MeassageBox = 77d8050B
+00411B28 call 4120b0 functia romelsac parametrebad gadaecema Saxeli da codi xolo abrunebs
+bool-s.
+004120E0 abrunebs saxelis Sesabamis cods.
+
+
+
+004121BA
+// 1 decoder 0x26
+004121CB 8B 15 4C 5E 42 00    mov         edx,dword ptr ds:[425E4Ch]
+004121D1 0F BE 1C 38          movsx       ebx,byte ptr [eax+edi]
+004121D5 03 DA                add         ebx,edx
+004121D7 03 CB                add         ecx,ebx
+004121D9 40                   inc         eax
+004121DA 3B C6                cmp         eax,esi
+004121DC 7C F3                jl          004121D1
+
+// 2 decoder 0x34
+004121FD 8B 15 50 5E 42 00    mov         edx,dword ptr ds:[425E50h]
+00412203 0F BE 2C 38          movsx       ebp,byte ptr [eax+edi]
+00412207 0F AF EA             imul        ebp,edx
+0041220A 03 CD                add         ecx,ebp
+0041220C 40                   inc         eax
+0041220D 3B C6                cmp         eax,esi
+0041220F 7C F2                jl          00412203
+
+// 3 decoder 0xC
+00412239 8B 15 54 5E 42 00    mov         edx,dword ptr ds:[425E54h]
+0041223F 0F BE 2C 38          movsx       ebp,byte ptr [eax+edi]
+00412243 03 EA                add         ebp,edx
+00412245 03 CD                add         ecx,ebp
+00412247 40                   inc         eax
+00412248 3B C6                cmp         eax,esi
+0041224A 7C F3                jl          0041223F
+
+// 4 decoder 0xE
+00412274 8B 15 58 5E 42 00    mov         edx,dword ptr ds:[425E58h]
+0041227A 0F BE 2C 38          movsx       ebp,byte ptr [eax+edi]
+0041227E 0F AF EA             imul        ebp,edx
+00412281 03 CD                add         ecx,ebp
+00412283 40                   inc         eax
+00412284 3B C6                cmp         eax,esi
+00412286 7C F2                jl          0041227A
+

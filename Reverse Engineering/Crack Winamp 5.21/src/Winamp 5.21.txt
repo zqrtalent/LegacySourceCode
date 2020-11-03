@@ -1,0 +1,278 @@
+by Zqr: 1 April 2006
+crack info: 
+
+15371h in exe
+before
+00415F71 89 08 mov         dword ptr [eax],ecx 
+after
+00415F71 89 30 mov         dword ptr [eax],esi
+1543fh in exe
+before
+0041603F 6A FD                push        0FDh
+after
+0041603F 6A 00                push        0h
+15525h in exe
+before
+00416125 6A FC                push        0FCh
+after
+00416125 6A 00                push        0h
+15529h in exe
+before
+00416129 6A FE                push        0FEh
+after
+00416129 6A 00                push        0h
+
+decoder function.
+
+00415F60 55                   push        ebp
+00415F61 8D 6C 24 94          lea         ebp,[esp-6Ch]
+00415F65 81 EC 84 01 00 00    sub         esp,184h
+00415F6B 8B 45 7C             mov         eax,dword ptr [ebp+7Ch]
+00415F6E 33 C9                xor         ecx,ecx
+00415F70 56                   push        esi
+00415F71 89 08                mov         dword ptr [eax],ecx
+00415F73 33 F6                xor         esi,esi
+00415F75 89 0F                mov         dword ptr [edi],ecx
+00415F77 C7 45 64 0B 00 00 00 mov         dword ptr [ebp+64h],0Bh
+00415F7E 33 D2                xor         edx,edx
+00415F80 89 4D 60             mov         dword ptr [ebp+60h],ecx
+
+// loop start. [ebp-78h] is address of registration code string.
+00415F83 8B 45 78             mov         eax,dword ptr [ebp+78h]
+// store current charecter into eax reg.
+00415F86 0F BE 00             movsx       eax,byte ptr [eax]
+// increase code string pointer.
+00415F89 FF 45 78             inc         dword ptr [ebp+78h]
+
+if( code[i] >= 'a' && code[i] <= 'z' ) code[i] -= 0x20; // make big simbol.
+if(
+00415F8C 83 F8 61             cmp         eax,61h = 'a'
+00415F8F 7C 08                jl          00415F99
+00415F91 83 F8 7A             cmp         eax,7Ah = 'z'
+00415F94 7F 03                jg          00415F99
+  )
+{
+00415F96 83 E8 20             sub         eax,20h
+}
+
+if( code[i] == 'G' )
+if( 
+00415F99 83 F8 47             cmp         eax,47h = 'G'
+00415F9C 75 04                jne         00415FA2
+  )
+{
+00415F9E 6A 36                push        36h
+00415FA0 EB 0C                jmp         00415FAE
+}
+
+if( code[i] == 'I' || code[i] == 'L' )
+if(
+00415FA2 83 F8 49             cmp         eax,49h = 'I'
+00415FA5 74 05                je          00415FAC
+00415FA7 83 F8 4C             cmp         eax,4Ch = 'L'
+00415FAA 75 08                jne         00415FB4
+  )
+{
+00415FAC 6A 31                push        31h
+00415FAE 58                   pop         eax
+00415FAF 83 E8 30             sub         eax,30h
+00415FB2 EB 43                jmp         00415FF7
+}
+
+if( code[i] == 'O' )
+if(
+00415FB4 83 F8 4F             cmp         eax,4Fh = 'O'
+00415FB7 75 03                jne         00415FBC
+  )
+{
+00415FB9 6A 30                push        30h
+00415FBB 58                   pop         eax
+}
+
+if( code[i] >= '0' && code[i] <= '9') // if number.
+if(
+00415FBC 83 F8 30             cmp         eax,30h = '0'
+00415FBF 7C 05                jl          00415FC6
+00415FC1 83 F8 39             cmp         eax,39h = '9'
+00415FC4 7E E9                jle         00415FAF
+  )
+{
+	jmp 00415FAF
+}
+if( code[i] >= 'A' && code[i] <= 'Z') // if not number.
+if(
+00415FC6 83 F8 41             cmp         eax,41h = 'A'
+00415FC9 7C 05                jl          00415FD0
+00415FCB 83 F8 5A             cmp         eax,5Ah = 'Z'
+00415FCE 7E 0C                jle         00415FDC
+  )
+{
+	jmp 00415FDC
+}
+
+if( code[i] == 0x00 )
+if(
+00415FD0 85 C0                test        eax,eax
+00415FD2 75 AF                jne         00415F83
+  )
+{
+00415FD4 83 C8 FF             or          eax,0FFh
+00415FD7 E9 50 01 00 00       jmp         0041612C
+}
+else
+{
+	jmp 00415F83
+}
+
+if( code[i] > 'O' )
+if(
+00415FDC 83 F8 4F             cmp         eax,4Fh = 'O'
+00415FDF 7E 01                jle         00415FE2
+  )
+{
+00415FE1 48                   dec         eax
+}
+
+if( code[i] > 'L' )
+if(
+00415FE2 83 F8 4C             cmp         eax,4Ch = 'L'
+00415FE5 7E 01                jle         00415FE8
+  )
+{
+00415FE7 48                   dec         eax
+}
+
+if( code[i] > 'I' )
+if(
+00415FE8 83 F8 49             cmp         eax,49h = 'I'
+00415FEB 7E 01                jle         00415FEE
+  )
+{
+00415FED 48                   dec         eax
+}
+
+if( code[i] > 'G' )
+if(
+00415FEE 83 F8 47             cmp         eax,47h = 'G'
+00415FF1 7E 01                jle         00415FF4
+  )
+{
+00415FF3 48                   dec         eax
+}
+
+00415FF4 83 E8 37             sub         eax,37h
+00415FF7 D3 E0                shl         eax,cl
+00415FF9 83 C1 05             add         ecx,5
+00415FFC 0B D0                or          edx,eax
+00415FFE 83 F9 08             cmp         ecx,8
+00416001 7E 11                jle         00416014
+00416003 0F B6 C2             movzx       eax,dl
+00416006 31 45 64             xor         dword ptr [ebp+64h],eax
+00416009 88 54 35 50          mov         byte ptr [ebp+esi+50h],dl
+0041600D 46                   inc         esi
+0041600E 83 E9 08             sub         ecx,8
+00416011 C1 FA 08             sar         edx,8
+00416014 83 45 60 05          add         dword ptr [ebp+60h],5
+00416018 83 7D 60 64          cmp         dword ptr [ebp+60h],64h
+0041601C 0F 8C 61 FF FF FF    jl          00415F83
+00416022 85 C9                test        ecx,ecx
+00416024 0F 8E FF 00 00 00    jle         00416129
+0041602A 83 FE 0D             cmp         esi,0Dh
+0041602D 0F 8D F6 00 00 00    jge         00416129
+00416033 88 54 35 50          mov         byte ptr [ebp+esi+50h],dl
+00416037 33 55 64             xor         edx,dword ptr [ebp+64h]
+0041603A F6 C2 0F             test        dl,0Fh
+0041603D 74 07                je          00416046
+0041603F 6A FD                push        0FDh
+00416041 E9 E5 00 00 00       jmp         0041612B
+00416046 53                   push        ebx
+00416047 6A F4                push        0F4h
+00416049 5E                   pop         esi
+0041604A 6A 02                push        2
+0041604C 5B                   pop         ebx
+0041604D 8D 45 50             lea         eax,[ebp+50h]
+00416050 33 D2                xor         edx,edx
+00416052 2B D8                sub         ebx,eax
+00416054 85 F6                test        esi,esi
+00416056 7D 1D                jge         00416075
+00416058 33 C9                xor         ecx,ecx
+0041605A 8D 44 15 50          lea         eax,[ebp+edx+50h]
+0041605E 8A CB                mov         cl,bl
+00416060 02 C8                add         cl,al
+00416062 0F B6 00             movzx       eax,byte ptr [eax]
+00416065 25 80 00 00 00       and         eax,80h
+0041606A D3 E8                shr         eax,cl
+0041606C 8B C8                mov         ecx,eax
+0041606E 8B 45 7C             mov         eax,dword ptr [ebp+7Ch]
+00416071 09 08                or          dword ptr [eax],ecx
+00416073 EB 0E                jmp         00416083
+00416075 0F B6 44 15 50       movzx       eax,byte ptr [ebp+edx+50h]
+0041607A C1 E8 06             shr         eax,6
+0041607D 8B CE                mov         ecx,esi
+0041607F D3 E0                shl         eax,cl
+00416081 09 07                or          dword ptr [edi],eax
+00416083 42                   inc         edx
+00416084 46                   inc         esi
+00416085 46                   inc         esi
+00416086 83 FE 0C             cmp         esi,0Ch
+00416089 7C C9                jl          00416054
+0041608B 8D 85 E8 FE FF FF    lea         eax,[ebp-118h]
+00416091 E8 63 FB FF FF       call        00415BF9
+00416096 8D 85 E8 FE FF FF    lea         eax,[ebp-118h]
+0041609C 50                   push        eax
+0041609D 8B 45 74             mov         eax,dword ptr [ebp+74h]
+004160A0 E8 36 FE FF FF       call        00415EDB
+004160A5 8B 45 7C             mov         eax,dword ptr [ebp+7Ch]
+004160A8 8A 00                mov         al,byte ptr [eax]
+004160AA 88 45 7F             mov         byte ptr [ebp+7Fh],al
+004160AD 8A 07                mov         al,byte ptr [edi]
+004160AF 88 45 6B             mov         byte ptr [ebp+6Bh],al
+004160B2 8B 07                mov         eax,dword ptr [edi]
+004160B4 C1 F8 08             sar         eax,8
+004160B7 88 45 6A             mov         byte ptr [ebp+6Ah],al
+004160BA 8D 45 7F             lea         eax,[ebp+7Fh]
+004160BD 6A 01                push        1
+004160BF 50                   push        eax
+004160C0 8D 8D E8 FE FF FF    lea         ecx,[ebp-118h]
+004160C6 E8 71 FB FF FF       call        00415C3C
+004160CB 8D 45 6B             lea         eax,[ebp+6Bh]
+004160CE 6A 01                push        1
+004160D0 50                   push        eax
+004160D1 E8 66 FB FF FF       call        00415C3C
+004160D6 8D 45 6A             lea         eax,[ebp+6Ah]
+004160D9 6A 01                push        1
+004160DB 50                   push        eax
+004160DC E8 5B FB FF FF       call        00415C3C
+004160E1 6A 10                push        10h
+004160E3 68 BC 55 46 00       push        4655BCh
+004160E8 E8 4F FB FF FF       call        00415C3C
+004160ED 8D 45 44             lea         eax,[ebp+44h]
+004160F0 50                   push        eax
+004160F1 E8 71 FD FF FF       call        00415E67
+004160F6 83 C4 28             add         esp,28h
+004160F9 33 C0                xor         eax,eax
+004160FB 5B                   pop         ebx
+004160FC 0F B6 54 05 50       movzx       edx,byte ptr [ebp+eax+50h]
+00416101 0F B6 4C 05 44       movzx       ecx,byte ptr [ebp+eax+44h]
+00416106 33 CA                xor         ecx,edx
+00416108 33 D2                xor         edx,edx
+0041610A 83 F8 06             cmp         eax,6
+0041610D 0F 9D C2             setge       dl
+00416110 4A                   dec         edx
+00416111 83 E2 40             and         edx,40h
+00416114 83 C2 3F             add         edx,3Fh
+00416117 85 CA                test        edx,ecx
+00416119 75 0A                jne         00416125
+0041611B 40                   inc         eax
+0041611C 83 F8 0C             cmp         eax,0Ch
+0041611F 7C DB                jl          004160FC
+00416121 33 C0                xor         eax,eax      // valid registration code. Zqr...
+00416123 EB 07                jmp         0041612C
+00416125 6A FC                push        0FCh
+00416127 EB 02                jmp         0041612B
+00416129 6A FE                push        0FEh
+0041612B 58                   pop         eax
+0041612C 5E                   pop         esi
+0041612D 83 C5 6C             add         ebp,6Ch
+00416130 C9                   leave
+00416131 C3                   ret

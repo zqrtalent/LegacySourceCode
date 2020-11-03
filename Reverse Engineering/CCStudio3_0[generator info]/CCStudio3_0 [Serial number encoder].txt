@@ -1,0 +1,333 @@
+1) C = A & B. 2) F = D  ^ E. 3) I  = G & H. 4) L = J ^K. 5) O= M  | N. 6) R= P | Q. 7) U= S ^ T. 8) Y= V | X. 9) AB=AA ^ Z. 10)AE=AC|AD.
+11)AG=AF|AI. 12)AK=AJ^AH. 13)AN=AL&AM. 14)XX=AO^AX. 15)AS=AR&AQ. 16)AU=AT|ZX. 17)XX = AV&E. 18)AZ=AY^AX. 19)BC=BA^BB.
+20)ZZ=BD|BE. 21)BH=BF|BG. 22)AT=Q&BI. 23)BL=BJ&BK. 24)BO=BM|BN. 25)BQ=AY|BP. 26)BT=BS^BR. 27)ZB=S&BU. 28)BX=AP&BY.
+
+ZX,S,BI,BE,AX,E,BY,BN      AY,AO,AC,G,AH,AR,A,BF - AI,O,K,I,BU,AL,F,C  AE,AA,BR,V,Y,T,R,BK      - 
+BM,AJ,B,BG,U,AG,BJ,AM  AS,BA,N,AP,AB,XX,AN,BD  - BC,AZ,0,X,AU,0,BS,AK  M,BL,0,AT,BH,AD,J,ZZ - 
+D,Q,BQ,BB,BP,L,AQ,BO   AF,H,P,Z,AV,BX,ZB,BT
+
+there is 28 must actual bit in serial code : 
+1) word[1]{0}=word[0]{9} & word[2]{5}  +
+2) word[1]{1}=word[4]{7} ^ word[0]{2}  +
+3) word[1]{4}=word[0]{12} & word[4]{14} +
+4) word[4]{2}=word[3]{9} ^ word[1]{5} +
+5) word[1]{6}=word[3]{15} | word[2]{13} + 
+6) word[1]{9}=word[4]{13} | word[4]{6} +
+7) word[2]{3}=word[0]{6} ^ word[1]{10} +
+8) word[1]{11}=word[1]{12} | word[3]{4} +
+9) word[2]{11}=word[1]{14} ^ word[4]{12} +
+10) word[1]{15}=word[0]{13} | word[3]{10} +
+11) word[2]{2}=word[4]{15} | word[1]{7}+
+12) word[3]{0}=word[2]{6} ^ word[0]{11}+
+13) word[2]{9}=word[1]{2} & word[2]{0}+
+14) word[2]{10}=word[0]{14} ^ word[0]{3}+
+15) word[2]{15}=word[0]{10} & word[4]{1}+
+16) word[3]{3}=word[3]{13} | word[0]{7}+
+17) word[3]{5}=word[4]{11} & word[0]{2}+
+18) word[3]{6}=word[0]{15} ^ word[0]{3}+
+19) word[3]{7}=word[2]{14} ^ word[4]{4}+
+20) word[3]{8}=word[2]{8} | word[0]{4}+
+21) word[3]{11}=word[0]{8} | word[2]{4}+
+22) word[3]{12}=word[4]{6} & word[0]{5}+
+23) word[3]{14}=word[2]{1} & word[1]{8}+
+24) word[4]{0}=word[2]{7} | word[0]{0}+
+25) word[4]{5}=word[0]{15} | word[4]{3}+
+26) word[4]{8}=word[3]{1} ^ word[1]{13}+
+27) word[4]{9}=word[0]{6} & word[1]{3}+
+28) word[4]{10}=word[2]{12} & word[0]{1}+
+
+ ---- 29 Steps to check serial code for CodeCharge Studio3_0 : ----
+--== stored in memory beatween check steps ==--
+word ptr [ebp-48h]  == word ptr [ebp-30h] >> 5.
+word ptr [ebp-14h]  == word ptr [ebp-38h] >> CH.
+word ptr [ebp-42h]  == word ptr [ebp-32h] >> 7.
+word ptr [ebp-3Ch] == word ptr [ebp-38h] >> 3.
+word ptr [ebp-2Ah] == word ptr [ebp-36h] >> 8.
+word ptr [ebp-26h] == word ptr [ebp-30h] >> 8.
+word ptr [ebp-24h] == word ptr [ebp-30h] >> 1.
+word ptr [ebp-22h] == word ptr [ebp-32h] >> 6.
+
+Step_1:
+1000F191 8B 45 C8                  mov         eax,dword ptr [ebp-38h]
+1000F194 3C 11                       cmp        al,11h
+1000F196 59                            pop         ecx
+1000F197 59                            pop         ecx
+1000F198 7C 08                       jl             1000F1A2
+1000F19A 3C 1E                      cmp        al,1Eh
+1000F19C 0F 8E 06 03 00 00    jle           1000F4A8
+Step_2:
+1000F1A2 8B 55 CC                 mov         edx,dword ptr [ebp-34h]
+1000F1A5 C1 EA 05                 shr          edx,5
+1000F1A8 8B C8                      mov         ecx,eax
+1000F1AA C1 E9 09                 shr          ecx,9
+1000F1AD 22 D1                      and         dl,cl
+1000F1AF 8B 4D CA                mov         ecx,dword ptr [ebp-36h]
+1000F1B2 32 D1                      xor          dl,cl
+1000F1B4 F6 C2 01                 test         dl,1
+1000F1B7 0F 85 EB 02 00 00   jne          1000F4A8
+Step_3:
+1000F1BD 33 FF                     xor          edi,edi
+1000F1BF 66 8B 7D D0           mov         di,word ptr [ebp-30h]
+1000F1C3 66 C1 EF 05           shr          di,5
+1000F1C7 66 89 7D B8           mov         word ptr [ebp-48h],di
+1000F1CB 8B D7                    mov        edx,edi
+1000F1CD 33 D0                    xor          edx,eax
+1000F1CF D1 EA                   shr          edx,1
+1000F1D1 32 D1                    xor          dl,cl
+1000F1D3 F6 C2 02               test         dl,2
+1000F1D6 0F 85 CC 02 00 00 jne          1000F4A8
+Step_4:
+1000F1DC 66 8B 45 C8          mov         ax,word ptr [ebp-38h]
+1000F1E0 8B 55 D0               mov         edx,dword ptr [ebp-30h]
+1000F1E3 66 C1 E8 0C          shr          ax,0Ch
+1000F1E7 C1 EA 0E              shr          edx,0Eh
+1000F1EA 22 D0                   and         dl,al
+1000F1EC 66 89 45 EC          mov         word ptr [ebp-14h],ax
+1000F1F0 8B C1                    mov        eax,ecx
+1000F1F2 C1 E8 04               shr          eax,4
+1000F1F5 32 D0                    xor          dl,al
+1000F1F7 F6 C2 01               test         dl,1
+1000F1FA 0F 85 A8 02 00 00 jne          1000F4A8
+Step_5:
+1000F200 66 8B 45 CE          mov         ax,word ptr [ebp-32h]
+1000F204 66 C1 E8 07          shr          ax,7
+1000F208 8B D1                   mov         edx,ecx
+1000F20A C1 EA 03             shr          edx,3
+1000F20D 32 D0                  xor          dl,al
+1000F20F 32 55 D0              xor          dl,byte ptr [ebp-30h]
+1000F212 66 89 45 BE         mov         word ptr [ebp-42h],ax
+1000F216 F6 C2 04              test         dl,4
+1000F219 0F 85 89 02 00 00 jne          1000F4A8
+Step_6:
+1000F21F 8B 45 CE             mov        eax,dword ptr [ebp-32h]
+1000F222 C1 E8 02              shr         eax,2
+1000F225 0B 45 CC              or          eax,dword ptr [ebp-34h]
+1000F228 33 D2                   xor         edx,edx
+1000F22A 8A D1                  mov        dl,cl
+1000F22C C1 E8 07             shr         eax,7
+1000F22F 6A 40                  push       40h
+1000F231 5F                       pop         edi
+1000F232 23 C7                  and         eax,edi
+1000F234 23 D7                  and         edx,edi
+1000F236 33 C2                  xor          eax,edx
+1000F238 66 A9 C0 FF         test        ax,0FFC0h
+1000F23C 0F 85 66 02 00 00 jne         1000F4A8
+Step_7:
+1000F242 8B 45 D0              mov         eax,dword ptr [ebp-30h]
+1000F245 C1 E8 07              shr          eax,7
+1000F248 0A 45 D0              or            al,byte ptr [ebp-30h]
+1000F24B 8B D1                  mov         edx,ecx
+1000F24D C1 EA 03             shr          edx,3
+1000F250 23 D7                   and         edx,edi
+1000F252 23 C7                   and         eax,edi
+1000F254 33 C2                   xor          eax,edx
+1000F256 66 A9 C0 FF          test        ax,0FFC0h
+1000F25A 0F 85 48 02 00 00  jne         1000F4A8
+Step_8:
+1000F260 66 8B 45 C8          mov         ax,word ptr [ebp-38h]
+1000F264 66 C1 E8 03          shr          ax,3
+1000F268 8B D1                   mov         edx,ecx
+1000F26A C1 EA 07             shr           edx,7
+1000F26D 32 D0                   xor          dl,al
+1000F26F 32 55 CC              xor          dl,byte ptr [ebp-34h]
+1000F272 66 89 45 C4          mov         word ptr [ebp-3Ch],ax
+1000F276 F6 C2 08              test         dl,8
+1000F279 0F 85 29 02 00 00 jne          1000F4A8
+Step_9:
+1000F27F 33 C0                   xor          eax,eax
+1000F281 66 89 4D D6          mov         word ptr [ebp-2Ah],cx
+1000F285 66 C1 6D D6 08     shr          word ptr [ebp-2Ah],8
+1000F28A 8A 45 D6              mov         al,byte ptr [ebp-2Ah]
+1000F28D 0A 45 CE              or           al,byte ptr [ebp-32h]
+1000F290 8B D1                   mov         edx,ecx
+1000F292 C1 EA 07              shr          edx,7
+1000F295 83 E2 10               and         edx,10h
+1000F298 83 E0 10               and         eax,10h
+1000F29B 33 C2                   xor          eax,edx
+1000F29D 66 A9 F0 FF          test        ax,0FFF0h
+1000F2A1 0F 85 01 02 00 00  jne         1000F4A8
+Step_10:
+1000F2A7 33 C0                   xor           eax,eax
+1000F2A9 66 8B 45 D0          mov         ax,word ptr [ebp-30h]
+1000F2AD 66 D1 E8              shr          ax,1
+1000F2B0 8B D1                   mov         edx,ecx
+1000F2B2 C1 EA 03              shr          edx,3
+1000F2B5 66 89 45 DC          mov         word ptr [ebp-24h],ax
+1000F2B9 33 D0                    xor          edx,eax
+1000F2BB 33 55 CC              xor          edx,dword ptr [ebp-34h]
+1000F2BE F6 C6 08              test         dh,8
+1000F2C1 0F 85 E1 01 00 00 jne          1000F4A8
+Step_11:
+1000F2C7 8B 7D C4               mov         edi,dword ptr [ebp-3Ch]
+1000F2CA 0B 7D CE              or            edi,dword ptr [ebp-32h]
+1000F2CD 8B D1                    mov         edx,ecx
+1000F2CF B8 00 04 00 00       mov         eax,400h
+1000F2D4 C1 EA 05               shr          edx,5
+1000F2D7 23 F8                     and         edi,eax
+1000F2D9 23 D0                     and         edx,eax
+1000F2DB 3B D7                    cmp        edx,edi
+1000F2DD 0F 85 C5 01 00 00  jne          1000F4A8
+Step_12:
+1000F2E3 66 8B 45 D0          mov         ax,word ptr [ebp-30h]
+1000F2E7 66 C1 E8 08          shr          ax,8
+1000F2EB 66 89 45 DA          mov        word ptr [ebp-26h],ax
+1000F2EF 0A C1                   or           al,cl
+1000F2F1 33 C9                    xor         ecx,ecx
+1000F2F3 8A 4D CC              mov        cl,byte ptr [ebp-34h]
+1000F2F6 C0 E8 05               shr         al,5
+1000F2F9 83 E1 04               and         ecx,4
+1000F2FC 83 E0 04              and          eax,4
+1000F2FF 33 C1                   xor          eax,ecx
+1000F301 66 A9 FC FF          test         ax,0FFFCh
+1000F305 0F 85 9D 01 00 00  jne         1000F4A8
+Step_13:
+1000F30B 66 8B 45 C8          mov         ax,word ptr [ebp-38h]
+1000F30F 8B 4D CC              mov         ecx,dword ptr [ebp-34h]
+1000F312 C1 E9 06               shr          ecx,6
+1000F315 66 C1 E8 0B          shr          ax,0Bh
+1000F319 32 C8                     xor         cl,al
+1000F31B 32 4D CE               xor         cl,byte ptr [ebp-32h]
+1000F31E F6 C1 01                test        cl,1
+1000F321 0F 85 81 01 00 00    jne         1000F4A8
+Step_14:
+1000F327 8B 4D CA             mov         ecx,dword ptr [ebp-36h]
+1000F32A 8B 55 CC             mov         edx,dword ptr [ebp-34h]
+1000F32D C1 E9 02              shr          ecx,2
+1000F330 22 4D CC              and         cl,byte ptr [ebp-34h]
+1000F333 C1 EA 09              shr          edx,9
+1000F336 32 CA                   xor          cl,dl
+1000F338 F6 C1 01               test         cl,1
+1000F33B 0F 85 67 01 00 00  jne         1000F4A8
+Step_15:
+1000F341 33 45 C8                xor         eax,dword ptr [ebp-38h]
+1000F344 66 8B 4D CC          mov        cx,word ptr [ebp-34h]
+1000F348 66 C1 E9 0A          shr          cx,0Ah
+1000F34C C1 E8 03               shr         eax,3
+1000F34F 32 C1                    xor         al,cl
+1000F351 A8 01                    test        al,1
+1000F353 0F 85 4F 01 00 00  jne         1000F4A8
+Step_16:
+1000F359 8B 45 C8               mov         eax,dword ptr [ebp-38h]
+1000F35C 66 8B 55 CC          mov         dx,word ptr [ebp-34h]
+1000F360 C1 E8 0A               shr          eax,0Ah
+1000F363 22 45 DC               and          al,byte ptr [ebp-24h]
+1000F366 66 C1 EA 0F          shr          dx,0Fh
+1000F36A 24 01                    and          al,1
+1000F36C 3A D0                   cmp         dl,al
+1000F36E 0F 85 34 01 00 00  jne          1000F4A8
+Step_17:
+1000F374 66 8B 45 CE          mov         ax,word ptr [ebp-32h]
+1000F378 66 C1 E8 06          shr          ax,6
+1000F37C 66 89 45 DE          mov         word ptr [ebp-22h],ax
+1000F380 0A 45 C8               or            al,byte ptr [ebp-38h]
+1000F383 33 D2                    xor          edx,edx
+1000F385 8A 55 CE               mov         dl,byte ptr [ebp-32h]
+1000F388 C0 E8 04               shr          al,4
+1000F38B 83 E2 08               and         edx,8
+1000F38E 83 E0 08               and         eax,8
+1000F391 33 C2                    xor         eax,edx
+1000F393 66 A9 F8 FF          test        ax,0FFF8h
+1000F397 0F 85 0B 01 00 00  jne         1000F4A8
+Step_18:
+1000F39D 8B 45 D0               mov         eax,dword ptr [ebp-30h]
+1000F3A0 8B 55 CE              mov         edx,dword ptr [ebp-32h]
+1000F3A3 C1 E8 09               shr         eax,9
+1000F3A6 22 45 C8               and         al,byte ptr [ebp-38h]
+1000F3A9 C1 EA 03              shr         edx,3
+1000F3AC 32 C2                   xor         al,dl
+1000F3AE A8 04                   test        al,4
+1000F3B0 0F 85 F2 00 00 00 jne         1000F4A8
+Step_19:
+1000F3B6 8B 45 EC               mov         eax,dword ptr [ebp-14h]
+1000F3B9 33 45 C8                xor          eax,dword ptr [ebp-38h]
+1000F3BC C1 E8 03               shr          eax,3
+1000F3BF 32 45 DE                xor         al,byte ptr [ebp-22h]
+1000F3C2 A8 01                     test        al,1
+1000F3C4 0F 85 DE 00 00 00   jne         1000F4A8
+Step_20:
+1000F3CA 33 4D D0               xor         ecx,dword ptr [ebp-30h]
+1000F3CD C1 E9 04               shr         ecx,4
+1000F3D0 32 4D BE               xor         cl,byte ptr [ebp-42h]
+1000F3D3 F6 C1 01                test        cl,1
+1000F3D6 0F 85 CC 00 00 00  jne         1000F4A8
+Step_21:
+1000F3DC 8B 45 CC             mov         eax,dword ptr [ebp-34h]
+1000F3DF 8B 7D CE             mov         edi,dword ptr [ebp-32h]
+1000F3E2 8B C8                   mov         ecx,eax
+1000F3E4 C1 E9 04              shr           ecx,4
+1000F3E7 0A 4D C8              or            cl,byte ptr [ebp-38h]
+1000F3EA 8B D7                  mov         edx,edi
+1000F3EC C1 EA 04             shr          edx,4
+1000F3EF 83 E2 10              and         edx,10h
+1000F3F2 83 E1 10               and         ecx,10h
+1000F3F5 33 CA                   xor          ecx,edx
+1000F3F7 66 F7 C1 F0 FF     test         cx,0FFF0h
+1000F3FC 0F 85 A6 00 00 00 jne          1000F4A8
+Step_22:
+1000F402 8B 4D C8             mov        ecx,dword ptr [ebp-38h]
+1000F405 C1 E9 04              shr         ecx,4
+1000F408 0A C8                  or            cl,al
+1000F40A 8B D7                  mov        edx,edi
+1000F40C C1 EA 07             shr         edx,7
+1000F40F 83 E2 10              and         edx,10h
+1000F412 83 E1 10               and        ecx,10h
+1000F415 33 CA                   xor         ecx,edx
+1000F417 66 F7 C1 F0 FF     test        cx,0FFF0h
+1000F41C 0F 85 86 00 00 00  jne         1000F4A8
+Step_23:
+1000F422 8B 4D D0             mov         ecx,dword ptr [ebp-30h]
+1000F425 D1 E9                  shr          ecx,1
+1000F427 22 4D C8             and         cl,byte ptr [ebp-38h]
+1000F42A 8B D7                  mov        edx,edi
+1000F42C C1 EA 07             shr         edx,7
+1000F42F 32 CA                  xor         cl,dl
+1000F431 F6 C1 20              test        cl,20h
+1000F434 75 72                   jne         1000F4A8
+Step_24:
+1000F436 8B C8                 mov         ecx,eax
+1000F438 D1 E9                 shr          ecx,1
+1000F43A 22 4D D6            and         cl,byte ptr [ebp-2Ah]
+1000F43D 8B D7                mov         edx,edi
+1000F43F C1 EA 0E           shr          edx,0Eh
+1000F442 32 CA                xor          cl,dl
+1000F444 F6 C1 01            test         cl,1
+1000F447 75 5F                 jne          1000F4A8
+Step_25:
+1000F449 8B C8                  mov        ecx,eax
+1000F44B C1 E9 07             shr         ecx,7
+1000F44E 0A 4D C8             or          cl,byte ptr [ebp-38h]
+1000F451 32 4D D0              xor         cl,byte ptr [ebp-30h]
+1000F454 F6 C1 01              test        cl,1
+1000F457 75 4F                   jne         1000F4A8
+Step_26:
+1000F459 8B 4D EC             mov        ecx,dword ptr [ebp-14h]
+1000F45C 0B 4D D0             or           ecx,dword ptr [ebp-30h]
+1000F45F C1 E9 03             shr          ecx,3
+1000F462 32 4D B8             xor          cl,byte ptr [ebp-48h]
+1000F465 F6 C1 01             test         cl,1
+1000F468 75 3E                  jne          1000F4A8
+Step_27:
+1000F46A 8B 4D CA             mov        ecx,dword ptr [ebp-36h]
+1000F46D C1 E9 0C             shr          ecx,0Ch
+1000F470 33 CF                   xor          ecx,edi
+1000F472 D1 E9                   shr         ecx,1
+1000F474 32 4D DA              xor         cl,byte ptr [ebp-26h]
+1000F477 F6 C1 01               test        cl,1
+1000F47A 75 2C                   jne         1000F4A8
+Step_28:
+1000F47C 8B 4D C8             mov         ecx,dword ptr [ebp-38h]
+1000F47F 8B 55 D0             mov         edx,dword ptr [ebp-30h]
+1000F482 C1 E9 03             shr           ecx,3
+1000F485 22 4D CA             and         cl,byte ptr [ebp-36h]
+1000F488 C1 EA 06             shr          edx,6
+1000F48B 32 CA                 xor           cl,dl
+1000F48D F6 C1 08             test         cl,8
+1000F490 75 16                   jne          1000F4A8
+Step_29:
+1000F492 8B 4D D0              mov         ecx,dword ptr [ebp-30h]
+1000F495 C1 E8 0B              shr          eax,0Bh
+1000F498 22 45 C8               and         al,byte ptr [ebp-38h]
+1000F49B C1 E9 09              shr         ecx,9
+1000F49E 32 C1                   xor         al,cl
+1000F4A0 A8 02                   test        al,2
+1000F4A2 0F 84 F5 07 00 00 je          1000FC9D
